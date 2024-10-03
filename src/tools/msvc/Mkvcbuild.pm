@@ -35,7 +35,9 @@ my $contrib_defines = { 'refint' => 'REFINT_VERBOSE' };
 my @contrib_uselibpq = ('dblink', 'oid2name', 'postgres_fdw', 'vacuumlo');
 my @contrib_uselibpgport   = ('oid2name', 'pg_standby', 'vacuumlo');
 my @contrib_uselibpgcommon = ('oid2name', 'pg_standby', 'vacuumlo');
-my $contrib_extralibs      = undef;
+my $contrib_extralibs      = {
+	'sslinfo'     => ['ws2_32.lib', 'advapi32.lib', 'crypt32.lib'],
+};
 my $contrib_extraincludes = { 'dblink' => ['src/backend'] };
 my $contrib_extrasource = {
 	'cube' => [ 'contrib/cube/cubescan.l', 'contrib/cube/cubeparse.y' ],
@@ -180,6 +182,8 @@ sub mkvcbuild
 	$postgres->AddDefine('BUILDING_DLL');
 	$postgres->AddLibrary('secur32.lib');
 	$postgres->AddLibrary('ws2_32.lib');
+	$postgres->AddLibrary('crypt32.lib');
+	$postgres->AddLibrary('advapi32.lib');
 	$postgres->AddLibrary('wldap32.lib') if ($solution->{options}->{ldap});
 	$postgres->FullExportDLL('postgres.lib');
 
@@ -237,6 +241,8 @@ sub mkvcbuild
 	$libpq->AddIncludeDir('src/port');
 	$libpq->AddLibrary('secur32.lib');
 	$libpq->AddLibrary('ws2_32.lib');
+	$libpq->AddLibrary('crypt32.lib');
+	$libpq->AddLibrary('advapi32.lib');
 	$libpq->AddLibrary('wldap32.lib') if ($solution->{options}->{ldap});
 	$libpq->UseDef('src/interfaces/libpq/libpqdll.def');
 	$libpq->ReplaceFile('src/interfaces/libpq/libpqrc.c',
@@ -460,6 +466,8 @@ sub mkvcbuild
 	}
 	$pgcrypto->AddReference($postgres);
 	$pgcrypto->AddLibrary('ws2_32.lib');
+	$pgcrypto->AddLibrary('crypt32.lib');
+	$pgcrypto->AddLibrary('advapi32.lib');
 	my $mf = Project::read_file('contrib/pgcrypto/Makefile');
 	GenerateContribSqlFiles('pgcrypto', $mf);
 

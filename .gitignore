@@ -1,4 +1,5 @@
 # Global excludes across all subdirectories
+*.user
 *.o
 *.obj
 *.bc
@@ -42,3 +43,4 @@ lib*.pc
 /Debug/
 /Release/
 /tmp_install/
+/.vs/

@@ -868,20 +868,24 @@ typedef LONG slock_t;
 /* If using Visual C++ on Win64, inline assembly is unavailable.
  * Use a _mm_pause intrinsic instead of rep nop.
  */
-#if defined(_WIN64)
-static __forceinline void
-spin_delay(void)
+#if defined(_M_AMD64)
+static __forceinline void spin_delay(void)
 {
-	_mm_pause();
+	_mm_pause(); // For x64 and ARM64
+}
+#elif defined(_M_ARM) || defined(_M_ARM64)
+static __forceinline void spin_delay(void)
+{
+	__yield();
 }
 #else
-static __forceinline void
-spin_delay(void)
+static __forceinline void spin_delay(void)
 {
 	/* See comment for gcc code. Same code, MASM syntax */
-	__asm rep nop;
+	__asm rep nop; // x86
 }
 #endif
+
 
 #include <intrin.h>
 #pragma intrinsic(_ReadWriteBarrier)

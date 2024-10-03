@@ -29,7 +29,7 @@
 #endif
 
 #include "port/pg_crc32c.h"
-
+#if !defined _M_ARM && !defined _M_ARM64
 static bool
 pg_crc32c_sse42_available(void)
 {
@@ -45,7 +45,7 @@ pg_crc32c_sse42_available(void)
 
 	return (exx[2] & (1 << 20)) != 0;	/* SSE 4.2 */
 }
-
+#endif
 /*
  * This gets called on the first call. It replaces the function pointer
  * so that subsequent calls are routed directly to the chosen implementation.
@@ -53,11 +53,12 @@ pg_crc32c_sse42_available(void)
 static pg_crc32c
 pg_comp_crc32c_choose(pg_crc32c crc, const void *data, size_t len)
 {
+#if !defined _M_ARM && !defined _M_ARM64
 	if (pg_crc32c_sse42_available())
 		pg_comp_crc32c = pg_comp_crc32c_sse42;
 	else
+#endif
 		pg_comp_crc32c = pg_comp_crc32c_sb8;
-
 	return pg_comp_crc32c(crc, data, len);
 }
 

@@ -29,7 +29,7 @@ sub _new
 	bless($self, $classname);
 
 	$self->DeterminePlatform();
-	my $bits = $self->{platform} eq 'Win32' ? 32 : 64;
+	my $bits = ($self->{platform} eq 'Win32' or $self->{platform} eq 'arm' )? 32 : 64;
 
 	$options->{float4byval} = 1
 	  unless exists $options->{float4byval};
@@ -75,7 +75,12 @@ sub DeterminePlatform
 	# Examine CL help output to determine if we are in 32 or 64-bit mode.
 	my $output = `cl /? 2>&1`;
 	$? >> 8 == 0 or die "cl command not found";
-	$self->{platform} = ($output =~ /^\/favor:<.+AMD64/m) ? 'x64' : 'Win32';
+	$self->{platform} = 
+    ($output =~ /^\/favor:<.+AMD64/m) ? 'x64' : 
+    ($output =~ /arm64/i) ? 'arm64' : 
+    ($output =~ /arm/i) ? 'arm' : 
+    'Win32';
+
 	print "Detected hardware platform: $self->{platform}\n";
 	return;
 }

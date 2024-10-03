@@ -71,7 +71,7 @@ EOF
 			defs    => "_DEBUG;DEBUG=1",
 			opt     => 'Disabled',
 			strpool => 'false',
-			runtime => 'MultiThreadedDebugDLL'
+			runtime => 'MultiThreadedDebug'
 		});
 	$self->WriteItemDefinitionGroup(
 		$f,
@@ -80,7 +80,7 @@ EOF
 			defs    => "",
 			opt     => 'Full',
 			strpool => 'true',
-			runtime => 'MultiThreadedDLL'
+			runtime => 'MultiThreaded'
 		});
 	return;
 }
@@ -330,11 +330,9 @@ sub WriteItemDefinitionGroup
       <StackReserveSize>4194304</StackReserveSize>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <GenerateMapFile>false</GenerateMapFile>
-      <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <!-- Permit links to MinGW-built, 32-bit DLLs (default before VS2012). -->
       <ImageHasSafeExceptionHandlers/>
       <SubSystem>Console</SubSystem>
-      <TargetMachine>$targetmachine</TargetMachine>
 EOF
 	if ($self->{disablelinkerwarnings})
 	{
@@ -451,7 +449,13 @@ sub WriteConfigurationPropertyGroup
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
     <WholeProgramOptimization>$p->{wholeopt}</WholeProgramOptimization>
-    <PlatformToolset>$self->{PlatformToolset}</PlatformToolset>
+    <PlatformToolset Condition=\"'\$(VisualStudioVersion)' == '10.0'\">v100</PlatformToolset>
+    <PlatformToolset Condition=\"'\$(VisualStudioVersion)' == '11.0'\">v110</PlatformToolset>
+    <PlatformToolset Condition=\"'\$(VisualStudioVersion)' == '12.0'\">v120</PlatformToolset>
+    <PlatformToolset Condition=\"'\$(VisualStudioVersion)' == '14.0'\">v140</PlatformToolset>
+    <PlatformToolset Condition=\"'\$(VisualStudioVersion)' == '15.0'\">v141</PlatformToolset>
+    <PlatformToolset Condition=\"'\$(VisualStudioVersion)' == '16.0'\">v142</PlatformToolset>
+    <PlatformToolset Condition=\"'\$(VisualStudioVersion)' == '17.0'\">v143</PlatformToolset>
   </PropertyGroup>
 EOF
 	return;

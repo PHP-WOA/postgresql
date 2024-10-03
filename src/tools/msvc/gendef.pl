@@ -131,7 +131,7 @@ sub writedef
 
 		# Strip the leading underscore for win32, but not x64
 		$f =~ s/^_//
-		  unless ($platform eq "x64");
+		  if ($platform eq "Win32");
 
 		# Emit just the name if it's a function symbol, or emit the name
 		# decorated with the DATA option for variables.
@@ -159,7 +159,7 @@ sub usage
 usage()
   unless scalar(@ARGV) == 2
   && ( ($ARGV[0] =~ /\\([^\\]+$)/)
-	&& ($ARGV[1] eq 'Win32' || $ARGV[1] eq 'x64'));
+	&& ($ARGV[1] eq 'Win32' || $ARGV[1] eq 'x64' || $ARGV[1] eq 'arm' || $ARGV[1] eq 'arm64'));
 my $defname  = uc $1;
 my $deffile  = "$ARGV[0]/$defname.def";
 my $platform = $ARGV[1];

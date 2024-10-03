@@ -130,7 +130,7 @@ sub DetermineVisualStudioVersion
 	{
 		return _GetVisualStudioVersion($1, $2);
 	}
-
+	return "14.41";
 	croak
 	  "Unable to determine Visual Studio version: The nmake version could not be determined.";
 }

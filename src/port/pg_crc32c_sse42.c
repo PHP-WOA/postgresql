@@ -12,6 +12,7 @@
  *
  *-------------------------------------------------------------------------
  */
+#if !defined _M_ARM && !defined _M_ARM64
 #include "c.h"
 
 #include "port/pg_crc32c.h"
@@ -66,3 +67,4 @@ pg_comp_crc32c_sse42(pg_crc32c crc, const void *data, size_t len)
 
 	return crc;
 }
+#endif
